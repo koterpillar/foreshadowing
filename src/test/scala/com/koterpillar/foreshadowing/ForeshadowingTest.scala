@@ -15,17 +15,24 @@ class ForeshadowingTest extends FunSpec {
     }
 
     it("should produce a result") {
+      def isVowel(c: Char) = c match {
+        case 'a' | 'e' | 'i' | 'o' | 'u' => true
+        case _                           => false
+      }
+
       val Eventually(result) = for {
-        len <- Divination[String, Int](_.length)
-      } yield s"This string is $len characters long."
+        len    <- Divination[String, Int](_.length)
+        vowels <- Divination[String, Int](_.count(isVowel))
+      } yield s"This string is $len characters long. It has $vowels vowels."
 
-      val withoutDigits = result.filter(!_.isDigit)
-      assert(result.filter(_.isDigit).toInt == result.length)
-
-      val removeDigits = "[0-9]+".r
+      val digits = "[0-9]+".r
       assert(
-        removeDigits
-          .replaceAllIn(result, "XX") == "This string is XX characters long.")
+        digits.replaceAllIn(result, "XX") == "This string is XX characters long. It has XX vowels.")
+
+      val Seq(length, vowels) = digits.findAllIn(result).toSeq
+
+      assert(length.toInt == result.length)
+      assert(vowels.toInt == result.count(isVowel))
     }
   }
 }
