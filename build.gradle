@@ -10,6 +10,7 @@ buildscript {
 plugins {
     id 'scala'
     id 'com.adtran.scala-multiversion-plugin' version '1.0.30'
+    id "com.diffplug.gradle.spotless" version "3.13.0"
 }
 
 dependencies {
@@ -25,6 +26,28 @@ repositories {
     jcenter()
 }
 
+spotless {
+    scala {
+        scalafmt('1.5.1').configFile("${rootDir}/.scalafmt.conf")
+        target project.fileTree(projectDir) {
+            include '**/*.scala'
+            exclude 'submodules/**'
+        }
+    }
+    format 'misc', {
+        target project.fileTree(projectDir) {
+            include '**/*.gradle', '**/*.md', '**/.gitignore', '**/*.scala', '**/*.properties', '**/*.conf', '**/*.yml', '**/*.xml'
+            exclude 'submodules/**'
+            exclude 'build/**'
+            exclude 'target/**'
+            exclude '.gradle/**'
+        }
+        trimTrailingWhitespace()
+        indentWithSpaces()
+        endWithNewline()
+    }
+}
+
 wrapper {
-    version = '4.9'
+    gradleVersion = '4.9'
 }

@@ -11,17 +11,21 @@ case class Certainity[Result, A](value: A) extends Foreshadowing[Result, A] {
   def result(result: Result): A = value
 
   def map[B](fn: A => B): Foreshadowing[Result, B] = Certainity(fn(value))
-  def flatMap[B](fn: A => Foreshadowing[Result, B]): Foreshadowing[Result, B] = fn(value)
+  def flatMap[B](fn: A => Foreshadowing[Result, B]): Foreshadowing[Result, B] =
+    fn(value)
 }
 
-case class Divination[Result, A](fn: Result => A) extends Foreshadowing[Result, A] {
+case class Divination[Result, A](fn: Result => A)
+    extends Foreshadowing[Result, A] {
   def result(result: Result): A = fn(result)
 
-  def map[B](fn: A => B): Foreshadowing[Result, B] = Divination(result => fn(this.fn(result)))
-  def flatMap[B](fn: A => Foreshadowing[Result, B]): Foreshadowing[Result, B] = Divination {
-    result => fn(this.fn(result)) match {
-      case Certainity(value) => value
-      case Divination(nextFn) => nextFn(result)
+  def map[B](fn: A => B): Foreshadowing[Result, B] =
+    Divination(result => fn(this.fn(result)))
+  def flatMap[B](fn: A => Foreshadowing[Result, B]): Foreshadowing[Result, B] =
+    Divination { result =>
+      fn(this.fn(result)) match {
+        case Certainity(value)  => value
+        case Divination(nextFn) => nextFn(result)
+      }
     }
-  }
 }

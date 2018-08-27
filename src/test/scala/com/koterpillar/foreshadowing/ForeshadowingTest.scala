@@ -23,7 +23,9 @@ class ForeshadowingTest extends FunSpec {
       assert(result.filter(_.isDigit).toInt == result.length)
 
       val removeDigits = "[0-9]+".r
-      assert(removeDigits.replaceAllIn(result, "XX") == "This string is XX characters long.")
+      assert(
+        removeDigits
+          .replaceAllIn(result, "XX") == "This string is XX characters long.")
     }
   }
 }
