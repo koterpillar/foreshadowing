@@ -15,7 +15,7 @@ class ForeshadowingTest extends FunSpec {
     }
 
     it("should produce a result") {
-      val isVowel = Set('a' ,'e', 'i' , 'o' , 'u')
+      val isVowel = Set('a', 'e', 'i', 'o', 'u')
 
       val Eventually(result) = for {
         len    <- Divination[String, Int](_.length)
