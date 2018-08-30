@@ -6,11 +6,11 @@ class ForeshadowingTest extends FunSpec {
   describe("Foreshadowing") {
     it("should work in a for comprehension") {
       val foreshadowing: Foreshadowing[Int, Int] = for {
-        x <- Certainity[Int, Int](2)
-        y <- Certainity[Int, Int](x + 1)
+        x <- Certainty[Int, Int](2)
+        y <- Certainty[Int, Int](x + 1)
       } yield x * y
 
-      val Certainity(result) = foreshadowing
+      val Certainty(result) = foreshadowing
       assert(result == 6)
     }
 
