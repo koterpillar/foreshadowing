@@ -4,16 +4,6 @@ import org.scalatest.FunSpec
 
 class ForeshadowingTest extends FunSpec {
   describe("Foreshadowing") {
-    it("should work in a for comprehension") {
-      val foreshadowing: Foreshadowing[Int, Int] = for {
-        x <- Certainty[Int, Int](2)
-        y <- Certainty[Int, Int](x + 1)
-      } yield x * y
-
-      val Certainty(result) = foreshadowing
-      assert(result == 6)
-    }
-
     it("should produce a result") {
       val isVowel = Set('a', 'e', 'i', 'o', 'u')
 
